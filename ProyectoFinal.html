@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulador de Movimiento - Cálculo Diferencial</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #e0f7fa, #fff);
+      color: #333;
+    }
+    header, footer {
+      background-color: #00796b;
+      color: white;
+      text-align: center;
+      padding: 15px 20px;
+    }
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+    section {
+      margin-bottom: 30px;
+      background: #ffffffc7;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #004d40;
+      margin-bottom: 10px;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    form label {
+      flex: 1 1 180px;
+      display: flex;
+      flex-direction: column;
+    }
+    input {
+      padding: 5px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    canvas {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 768px) {
+      .charts {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Simulador Interactivo: Tiro Parabólico y MRUA</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Introducción</h2>
+      <p>Explora los principios del Movimiento Rectilíneo Uniformemente Acelerado (MRUA) y del Tiro Parabólico a través de visualizaciones gráficas, animaciones y ejemplos cotidianos. Todo vinculado al cálculo diferencial.</p>
+    </section>
+
+    <section>
+      <h2>¿Qué es el Movimiento Parabólico?</h2>
+      <p>El tiro parabólico es un tipo de movimiento en dos dimensiones donde un objeto es lanzado con una velocidad inicial formando un ángulo respecto a la horizontal. Este movimiento puede dividirse en dos partes: el movimiento horizontal con velocidad constante, y el movimiento vertical con aceleración constante debido a la gravedad.</p>
+      <ul>
+        <li>Trayectoria curva (forma de parábola)</li>
+        <li>Componentes independientes: horizontal y vertical</li>
+        <li>Aplicaciones: deportes (fútbol, béisbol), fuentes, cohetes, etc.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>¿Qué es el MRUA?</h2>
+      <p>Es un movimiento en línea recta donde la aceleración es constante. Se aplica, por ejemplo, cuando un vehículo acelera o frena en una carretera recta, o en el caso de caída libre sin fricción.</p>
+      <ul>
+        <li>Velocidad cambia linealmente</li>
+        <li>Posición cambia cuadráticamente</li>
+        <li>Aceleración constante</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Relación con Cálculo Diferencial</h2>
+      <p>En cálculo diferencial, se estudia cómo cambian las magnitudes con respecto al tiempo:</p>
+      <ul>
+        <li>La <strong>velocidad</strong> es la derivada de la <strong>posición</strong>.</li>
+        <li>La <strong>aceleración</strong> es la derivada de la <strong>velocidad</strong>.</li>
+        <li>Se pueden usar derivadas para encontrar puntos máximos (como el punto más alto del tiro parabólico).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Fórmulas Clave</h2>
+      <ul>
+        <li><strong>x(t)</strong> = v<sub>0x</sub> t</li>
+        <li><strong>y(t)</strong> = v<sub>0y</sub> t - (1/2) g t<sup>2</sup></li>
+        <li><strong>v</strong> = √(v<sub>x</sub>² + v<sub>y</sub>²)</li>
+        <li><strong>a</strong> = constante = g</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Configura tu lanzamiento</h2>
+      <form>
+        <label>Velocidad inicial (m/s)
+          <input type="number" id="v0" value="20" oninput="update()">
+        </label>
+        <label>Ángulo (grados)
+          <input type="number" id="angle" value="45" oninput="update()">
+        </label>
+        <label>Gravedad (m/s²)
+          <input type="number" id="g" value="9.81" oninput="update()">
+        </label>
+        <label>Duración total (s)
+          <input type="number" id="tMax" value="5" oninput="update()">
+        </label>
+      </form>
+    </section>
+
+    <section class="charts">
+      <div>
+        <h2>Trayectoria</h2>
+        <canvas id="trajectory"></canvas>
+      </div>
+      <div>
+        <h2>Velocidad vs Tiempo</h2>
+        <canvas id="velocityChart"></canvas>
+      </div>
+      <div style="grid-column: 1/-1">
+        <h2>Aceleración vs Tiempo</h2>
+        <canvas id="accelerationChart"></canvas>
+      </div>
+    </section>
+
+    <section>
+      <h2>Conclusión</h2>
+      <p>Esta aplicación muestra cómo el cálculo diferencial se aplica en el estudio del movimiento, permitiendo entender de forma visual cómo cambian la posición, velocidad y aceleración con el tiempo. Además, ilustra cómo se relacionan los conceptos de física con matemáticas usando ejemplos simples que cualquiera puede experimentar en la vida real.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Proyecto final de Cálculo Diferencial - Simulador de Movimiento</p>
+  </footer>
+
+  <script>
+    const ctx1 = document.getElementById('trajectory').getContext('2d');
+    const ctx2 = document.getElementById('velocityChart').getContext('2d');
+    const ctx3 = document.getElementById('accelerationChart').getContext('2d');
+
+    let chart1 = new Chart(ctx1, {
+      type: 'line', data: {labels:[], datasets:[{label:'Trayectoria', data:[], borderColor:'blue', fill:false}]},
+      options: {scales: {x: {title: {display:true, text:'x (m)'}}, y: {title: {display:true, text:'y (m)'}}}}
+    });
+    let chart2 = new Chart(ctx2, {
+      type: 'line', data: {labels:[], datasets:[{label:'Velocidad (m/s)', data:[], borderColor:'orange', fill:false}]},
+      options: {scales: {x: {title: {display:true, text:'t (s)'}}, y: {title: {display:true, text:'v (m/s)'}}}}
+    });
+    let chart3 = new Chart(ctx3, {
+      type: 'line', data: {labels:[], datasets:[{label:'Aceleración (m/s²)', data:[], borderColor:'green', fill:false}]},
+      options: {scales: {x: {title: {display:true, text:'t (s)'}}, y: {title: {display:true, text:'a (m/s²)'}}}}
+    });
+
+    function update() {
+      const v0 = parseFloat(document.getElementById('v0').value);
+      const angle = parseFloat(document.getElementById('angle').value) * Math.PI / 180;
+      const g = parseFloat(document.getElementById('g').value);
+      const tMax = parseFloat(document.getElementById('tMax').value);
+      const steps = 200;
+
+      const vx = v0 * Math.cos(angle);
+      const vy = v0 * Math.sin(angle);
+
+      let x = [], y = [], t = [], v = [], a = [];
+
+      for (let i = 0; i <= steps; i++) {
+        const time = i * tMax / steps;
+        t.push(time.toFixed(2));
+        x.push((vx * time).toFixed(2));
+        y.push((vy * time - 0.5 * g * time * time).toFixed(2));
+        v.push((Math.sqrt(vx**2 + (vy - g * time)**2)).toFixed(2));
+        a.push(g.toFixed(2));
+      }
+
+      chart1.data.labels = x;
+      chart1.data.datasets[0].data = x.map((val, i) => ({x: parseFloat(val), y: parseFloat(y[i])}));
+      chart2.data.labels = t;
+      chart2.data.datasets[0].data = v;
+      chart3.data.labels = t;
+      chart3.data.datasets[0].data = a;
+
+      chart1.update();
+      chart2.update();
+      chart3.update();
+    }
+
+    update();
+  </script>
+</body>
+</html>
